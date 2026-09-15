@@ -280,7 +280,7 @@ recommendation
 ## Project Structure
 
 ```text
-m5-inventory-intelligence/
+inventory-intelligence/
 │
 ├── streamlit_app.py
 │
@@ -358,7 +358,7 @@ Contains small mock datasets that can be used to build and test dashboard compon
 
 ```bash
 git clone <repository-url>
-cd m5-inventory-intelligence
+cd inventory-intelligence
 ```
 
 ---
