@@ -1,0 +1,72 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# =========================
+# Jupyter / Kaggle
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Streamlit
+# =========================
+.streamlit/secrets.toml
+
+# =========================
+# Data
+# =========================
+
+# Raw datasets should not be committed
+data/raw/
+*.csv
+
+# Large generated/processed datasets
+data/processed/*
+!data/processed/.gitkeep
+
+# Allow small mock datasets if needed
+!data/mock/
+!data/mock/**
+
+# =========================
+# Model artifacts
+# =========================
+models/
+*.pkl
+*.pickle
+*.joblib
+
+# =========================
+# Environment / secrets
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs / temporary files
+# =========================
+*.log
+*.tmp
