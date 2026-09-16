@@ -6,7 +6,10 @@ import streamlit as st
 DATA_DIR = Path("data/processed")
 
 CLEAN_DATA_PATH = DATA_DIR / "m5_dashboard_clean.parquet"
-FORECAST_OUTPUT_PATH = DATA_DIR / "streamlit_forecast_output.parquet"
+FORECAST_OUTPUT_PATHS = (
+    DATA_DIR / "streamlit_forecast_output.parquet",
+    DATA_DIR / "forecasts.parquet",
+)
 RECOMMENDATION_PATH = DATA_DIR / "recommendations.parquet"
 
 @st.cache_data
@@ -49,13 +52,33 @@ def load_product_history(store_id, item_id):
 
 @st.cache_data
 def load_forecasts():
-    if not FORECAST_OUTPUT_PATH.exists():
+    forecast_path = next(
+        (path for path in FORECAST_OUTPUT_PATHS if path.exists()),
+        None,
+    )
+    if forecast_path is None:
         return pd.DataFrame()
 
-    df = pd.read_parquet(FORECAST_OUTPUT_PATH)
+    df = pd.read_parquet(forecast_path)
     df["date"] = pd.to_datetime(df["date"])
 
     return df
+
+
+@st.cache_data
+def load_overview_history(store_id=None, dept_id=None):
+    """Load only the fields needed for aggregate historical insights."""
+    filters = []
+    if store_id and store_id != "All":
+        filters.append(("store_id", "==", store_id))
+    if dept_id and dept_id != "All":
+        filters.append(("dept_id", "==", dept_id))
+
+    return pd.read_parquet(
+        CLEAN_DATA_PATH,
+        columns=["date", "sales", "is_weekend", "snap", "is_event"],
+        filters=filters or None,
+    )
 
 @st.cache_data
 def load_recommendations():

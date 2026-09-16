@@ -1,9 +1,5 @@
 import streamlit as st
 
-from src.ui import load_css
-
-load_css()
-
 st.set_page_config(
     page_title="Inventory Intelligence",
     page_icon="📦",
