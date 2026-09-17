@@ -14,6 +14,7 @@
 
     --border-soft: rgba(128, 128, 128, 0.20);
     --text-muted: #9ca3af;
+
     --sidebar-bg: #f7f8fa;
     --sidebar-card: rgba(255, 255, 255, 0.88);
     --sidebar-active: rgba(253, 187, 46, 0.16);
@@ -30,11 +31,46 @@
    Main layout
    ========================================================= */
 
+/*
+   IMPORTANT:
+   Do not manually compensate for sidebar width here.
+
+   Streamlit should control the relationship between the
+   sidebar and main content so collapsing/expanding works.
+*/
+
+[data-testid="stMain"] {
+    width: auto;
+    min-width: 0;
+    margin-left: 0;
+}
+
+
+/*
+   Allow the page to actually use the available width.
+
+   Previously:
+       max-width: 1500px
+
+   meant the page could not grow after the sidebar collapsed.
+*/
+[data-testid="stMainBlockContainer"],
 .block-container {
-    max-width: 1500px;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+
     padding-top: 3rem;
     padding-bottom: 3rem;
+
+    /*
+       Responsive horizontal spacing instead of a fixed
+       content width.
+    */
+    padding-left: clamp(1.25rem, 3vw, 3rem);
+    padding-right: clamp(1.25rem, 3vw, 3rem);
 }
+
 
 div[data-testid="stVerticalBlock"] {
     gap: 1rem;
@@ -45,172 +81,302 @@ div[data-testid="stVerticalBlock"] {
    Sidebar
    ========================================================= */
 
+/*
+   Cosmetic sidebar styling only.
+
+   Do NOT set:
+       width
+       min-width
+       max-width
+       left
+       margin-left
+       transform
+
+   Streamlit needs control of those properties for collapsing.
+*/
+
 section[data-testid="stSidebar"] {
     background: var(--sidebar-bg);
     border-right: 1px solid var(--sidebar-border);
-    min-width: 292px;
     overflow-x: hidden;
 }
+
 
 section[data-testid="stSidebar"] > div:first-child {
     background: var(--sidebar-bg);
 }
 
-section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
+
+section[data-testid="stSidebar"]
+[data-testid="stSidebarContent"] {
     padding: 0.85rem 0.7rem 1.5rem;
 }
 
-section[data-testid="stSidebar"] [data-testid="stSidebarNav"] {
+
+/* -------------------------
+   Sidebar navigation
+   ------------------------- */
+
+section[data-testid="stSidebar"]
+[data-testid="stSidebarNav"] {
     margin: 0.55rem 0 1rem;
 }
 
-section[data-testid="stSidebar"] [data-testid="stSidebarNavLink"] {
+
+section[data-testid="stSidebar"]
+[data-testid="stSidebarNavLink"] {
     align-items: center;
+
     border-radius: 10px;
+
     color: inherit;
+
     margin: 0.12rem 0;
+
     min-height: 2.7rem;
+
     padding: 0.55rem 0.72rem;
+
     position: relative;
 }
 
-section[data-testid="stSidebar"] [data-testid="stSidebarNavLink"]:hover {
+
+section[data-testid="stSidebar"]
+[data-testid="stSidebarNavLink"]:hover {
     background: rgba(128, 128, 128, 0.08);
 }
 
-section[data-testid="stSidebar"] [data-testid="stSidebarNavLink"][aria-current="page"] {
+
+section[data-testid="stSidebar"]
+[data-testid="stSidebarNavLink"][aria-current="page"] {
     background: var(--sidebar-active);
+
     color: inherit;
+
     font-weight: 600;
 }
 
-section[data-testid="stSidebar"] [data-testid="stSidebarNavLink"][aria-current="page"]::before {
+
+section[data-testid="stSidebar"]
+[data-testid="stSidebarNavLink"][aria-current="page"]::before {
     background: var(--wm-yellow);
+
     border-radius: 999px;
+
     content: "";
+
     height: 1.35rem;
+
     left: 0.35rem;
+
     position: absolute;
+
     width: 0.2rem;
 }
 
-section[data-testid="stSidebar"] [data-testid="stSidebarNavLink"] svg {
+
+section[data-testid="stSidebar"]
+[data-testid="stSidebarNavLink"] svg {
     margin-left: 0.35rem;
 }
 
+
+/* -------------------------
+   Sidebar branding
+   ------------------------- */
+
 .sidebar-brand-card {
     align-items: center;
+
     background: var(--sidebar-card);
+
     border: 1px solid var(--sidebar-border);
     border-radius: 12px;
+
     box-shadow: 0 2px 8px var(--sidebar-shadow);
+
     display: flex;
+
     gap: 0.7rem;
+
     margin: 0.15rem 0.1rem 0.8rem;
+
     min-height: 4.4rem;
+
     padding: 0.75rem 0.8rem;
 }
 
+
 .sidebar-brand-accent {
     background: var(--wm-yellow);
+
     border-radius: 999px;
+
     flex: 0 0 auto;
+
     height: 2.1rem;
+
     width: 0.32rem;
 }
 
+
 .sidebar-brand-title {
     color: inherit;
+
     font-size: 0.95rem;
+
     font-weight: 700;
+
     line-height: 1.2;
 }
+
 
 .sidebar-brand-subtitle,
 .sidebar-filter-heading,
 .sidebar-scope-label {
     color: var(--sidebar-muted);
+
     font-size: 0.68rem;
+
     font-weight: 700;
+
     letter-spacing: 0.09em;
+
     text-transform: uppercase;
 }
+
 
 .sidebar-brand-subtitle {
     margin-top: 0.22rem;
 }
 
+
+/* -------------------------
+   Sidebar filters
+   ------------------------- */
+
 .sidebar-filter-heading {
     border-top: 1px solid var(--sidebar-border);
+
     margin: 1.05rem 0 0.8rem;
+
     padding-top: 1rem;
 }
 
-section[data-testid="stSidebar"] div[data-baseweb="select"] > div {
+
+section[data-testid="stSidebar"]
+div[data-baseweb="select"] > div {
     background: var(--sidebar-card);
+
     border-color: var(--sidebar-border);
+
     border-radius: 10px;
+
     min-height: 2.7rem;
 }
 
-section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] {
+
+section[data-testid="stSidebar"]
+[data-testid="stWidgetLabel"] {
     font-size: 0.84rem;
+
     margin-bottom: 0.25rem;
 }
 
+
+/* -------------------------
+   Sidebar scope card
+   ------------------------- */
+
 .sidebar-scope-card {
     background: var(--sidebar-card);
+
     border: 1px solid var(--sidebar-border);
+
     border-radius: 10px;
+
     margin-top: 1.05rem;
+
     padding: 0.75rem 0.8rem;
 }
 
+
 .sidebar-scope-value {
     color: inherit;
+
     font-size: 0.88rem;
+
     font-weight: 650;
+
     line-height: 1.35;
+
     margin-top: 0.3rem;
 }
 
+
 .sidebar-scope-detail {
     color: var(--sidebar-muted);
+
     font-size: 0.75rem;
+
     margin-top: 0.2rem;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
+
     white-space: nowrap;
 }
+
 
 /* =========================================================
    Metric cards
    ========================================================= */
 
 div[data-testid="stMetric"] {
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-md);
-    padding: 1rem 1.15rem;
     background: rgba(128, 128, 128, 0.04);
+
+    border: 1px solid var(--border-soft);
+
+    border-radius: var(--radius-md);
+
+    box-sizing: border-box;
+
+    height: 100%;
+
+    padding: 1rem 1.15rem;
+
     transition:
         border-color 0.2s ease,
         transform 0.2s ease;
 }
 
+
 div[data-testid="stMetric"]:hover {
     border-color: rgba(0, 124, 194, 0.55);
+
     transform: translateY(-1px);
 }
 
+
 div[data-testid="stMetricLabel"] {
     color: var(--text-muted);
+
     font-size: 0.82rem;
+
     font-weight: 500;
 }
 
+
 div[data-testid="stMetricValue"] {
     font-weight: 650;
+
     letter-spacing: -0.02em;
+}
+
+
+div[data-testid="stMetricDelta"] {
+    font-size: 0.78rem;
 }
 
 
@@ -219,50 +385,80 @@ div[data-testid="stMetricValue"] {
    ========================================================= */
 
 .insight-card {
-    align-items: flex-end;
+    align-items: flex-start;
+
     background: rgba(128, 128, 128, 0.04);
+
     border: 1px solid var(--border-soft);
+
     border-radius: var(--radius-md);
+
     box-sizing: border-box;
+
     display: flex;
+
     flex-direction: column;
-    margin-bottom: 0.7rem;
+
+    height: 100%;
+
     min-height: 7.2rem;
+
     padding: 0.95rem 1rem;
-    text-align: right;
+
+    text-align: left;
+
     width: 100%;
 }
 
+
 .insight-label {
     color: var(--text-muted);
+
     font-size: 0.8rem;
+
     font-weight: 600;
+
+    letter-spacing: 0.025em;
+
     line-height: 1.3;
 }
 
+
 .insight-value {
     color: inherit;
+
     font-size: 1.85rem;
+
     font-weight: 700;
+
     letter-spacing: -0.03em;
+
     line-height: 1.15;
+
     margin-top: 0.35rem;
 }
 
+
 .insight-description {
     color: var(--text-muted);
+
     font-size: 0.78rem;
+
     line-height: 1.35;
+
     margin-top: auto;
+
     padding-top: 0.55rem;
 }
 
+
 .insight-blue {
-    border-right: 3px solid var(--wm-blue);
+    border-top: 3px solid var(--wm-blue);
 }
 
+
 .insight-yellow {
-    border-right: 3px solid var(--wm-yellow);
+    border-top: 3px solid var(--wm-yellow);
 }
 
 
@@ -271,8 +467,13 @@ div[data-testid="stMetricValue"] {
    ========================================================= */
 
 div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: rgba(128, 128, 128, 0.04);
+
     border-radius: var(--radius-lg);
+
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
+
 
 div[data-testid="stVerticalBlockBorderWrapper"] > div {
     border-color: var(--border-soft) !important;
@@ -284,9 +485,11 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {
    ========================================================= */
 
 h1 {
-    letter-spacing: -0.035em;
     font-weight: 700;
+
+    letter-spacing: -0.035em;
 }
+
 
 h2,
 h3 {
@@ -300,12 +503,16 @@ h3 {
 
 button[kind="primary"] {
     background-color: var(--wm-blue) !important;
+
     border-color: var(--wm-blue) !important;
+
     color: white !important;
 }
 
+
 button[kind="primary"]:hover {
     background-color: var(--wm-blue-hover) !important;
+
     border-color: var(--wm-blue-hover) !important;
 }
 
@@ -325,7 +532,9 @@ div[data-baseweb="select"] > div {
 
 div[data-testid="stDataFrame"] {
     border: 1px solid var(--border-soft);
+
     border-radius: var(--radius-md);
+
     overflow: hidden;
 }
 
@@ -336,6 +545,7 @@ div[data-testid="stDataFrame"] {
 
 div[data-testid="stExpander"] {
     border: 1px solid var(--border-soft);
+
     border-radius: var(--radius-md);
 }
 
@@ -346,22 +556,48 @@ div[data-testid="stExpander"] {
 
 .badge-blue {
     display: inline-block;
+
     padding: 0.25rem 0.55rem;
+
     border-radius: 999px;
+
     background: var(--wm-blue-soft);
+
     color: #007cc2;
+
     font-size: 0.75rem;
+
     font-weight: 600;
 }
 
+
 .badge-yellow {
     display: inline-block;
+
     padding: 0.25rem 0.55rem;
+
     border-radius: 999px;
+
     background: var(--wm-yellow);
+
     color: #111827;
+
     font-size: 0.75rem;
+
     font-weight: 650;
+}
+
+
+/* =========================================================
+   Responsive adjustments
+   ========================================================= */
+
+@media (max-width: 900px) {
+    [data-testid="stMainBlockContainer"],
+    .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
 
 
@@ -373,6 +609,36 @@ footer {
     visibility: hidden;
 }
 
-div[data-testid="stMetricDelta"] {
-    font-size: 0.78rem;
+/* =========================================================
+   Sidebar logo
+   ========================================================= */
+
+/* Give the logo more usable horizontal space */
+section[data-testid="stSidebar"] [data-testid="stSidebarHeader"] {
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+}
+
+/* Let the logo container expand */
+section[data-testid="stSidebar"] [data-testid="stLogo"] {
+    width: calc(100% - 1rem) !important;
+    max-width: none !important;
+}
+
+/* Make the actual image fill that space */
+section[data-testid="stSidebar"] [data-testid="stLogo"] img {
+    width: 100% !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: contain !important;
+}
+
+/* Make st.logo(size="large") larger */
+section[data-testid="stSidebar"] [data-testid="stLogo"] img {
+    height: 90px !important;
+    max-height: 90px !important;
+    width: auto !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
 }

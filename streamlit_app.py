@@ -1,9 +1,19 @@
 import streamlit as st
 
+from src.ui import load_css
+
 st.set_page_config(
     page_title="Inventory Intelligence",
-    page_icon="📦",
+    page_icon="assets/logo_icon.png",
     layout="wide"
+)
+
+load_css()
+
+st.logo(
+    "assets/logo.png",
+    size="large",
+    icon_image="assets/logo_icon.png",
 )
 
 pages = [
