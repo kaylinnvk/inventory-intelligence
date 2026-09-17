@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/inventory_intelligence_logo.png" alt="Inventory Intelligence" width="520">
+  <img src="assets/logo.png" alt="Inventory Intelligence" width="520">
 </p>
 
 Inventory Intelligence
