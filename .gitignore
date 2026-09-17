@@ -30,9 +30,17 @@ env/
 data/raw/
 *.csv
 
-# Large generated/processed datasets
+# Ignore processed data by default
 data/processed/*
+
+# Keep directory
 !data/processed/.gitkeep
+
+# Dashboard data required for deployment
+!data/processed/daily_summary.parquet
+!data/processed/product_catalog.parquet
+!data/processed/streamlit_forecast_output.parquet
+!data/processed/m5_dashboard_clean.parquet
 
 # Allow small mock datasets if needed
 !data/mock/
