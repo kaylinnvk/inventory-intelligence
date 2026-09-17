@@ -2,8 +2,6 @@
   <img src="assets/logo.png" alt="Inventory Intelligence" width="520">
 </p>
 
-Inventory Intelligence
-
 A Streamlit-based decision-support dashboard built on the M5 Forecasting dataset. It combines historical demand analysis, 28-day demand forecasting, and inventory-oriented recommendations to help users understand product demand and prioritize replenishment decisions.
 
 Scope
